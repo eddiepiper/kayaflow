@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 
 import anthropic
 from telegram import Update
@@ -224,29 +225,52 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     )
 
 
-_CASUAL_TRIGGERS: frozenset[str] = frozenset({
+_CASUAL_EXACT: frozenset[str] = frozenset({
     # greetings
-    "hi", "hello", "hey", "yo", "hiya", "sup", "morning", "good morning",
-    "afternoon", "good afternoon", "evening", "good evening",
-    # state / feelings
-    "how are you", "how are you?", "how r u", "how r u?", "how you doing",
-    "how are u", "u ok", "you ok", "you good",
-    # capability questions
-    "what can you do", "what can you do?", "what do you do", "what do you do?",
-    "what are you", "what are you?", "who are you", "who are you?",
-    "tell me about yourself", "what is kayaflow", "what's kayaflow",
-    "what does kayaflow do", "are you useful", "are you useful?",
+    "hi", "hello", "hey", "yo", "hiya", "sup",
+    "morning", "good morning", "afternoon", "good afternoon",
+    "evening", "good evening",
+    # state / feelings — normalized (no punctuation)
+    "how are you", "how r u", "how you doing", "how are u",
+    "u ok", "you ok", "you good",
+    # capability questions — normalized
+    "what can you do", "what do you do",
+    "what are you", "who are you",
+    "tell me about yourself", "what is kayaflow", "whats kayaflow",
+    "what does kayaflow do", "are you useful",
     # acknowledgements
     "thanks", "thank you", "thx", "ty", "appreciate it", "appreciated",
     "noted", "got it", "ok", "okay", "cool", "alright", "sure", "nice",
     "good", "great", "ok thanks", "okay thanks", "thanks lah", "ok lah",
 })
 
+# Substrings that identify casual intent for longer/varied phrasing
+_CASUAL_SUBSTRINGS: tuple[str, ...] = (
+    "can you do",        # "what can you do", "what scope can you do"
+    "can u do",          # "what can u do"
+    "do you do",         # "what do you do lah"
+    "how are you",       # "how are you ah", "how are you leh"
+    "what are you",      # "what are you exactly"
+    "who are you",       # "who are you ah"
+    "are you useful",    # "are you actually useful"
+    "what is kayaflow",  # "what is kayaflow exactly"
+    "tell me about",     # "tell me about yourself", "tell me about kayaflow"
+)
+
+_PUNCT_RE = re.compile(r"[^\w\s]")
+
+
+def _normalize(text: str) -> str:
+    """Lowercase, strip all punctuation, collapse whitespace."""
+    return _PUNCT_RE.sub("", text.lower()).strip()
+
 
 def is_casual_chat(text: str) -> bool:
     """Return True if the message is casual chat rather than a UX review follow-up."""
-    normalized = text.lower().strip().rstrip(".")
-    return normalized in _CASUAL_TRIGGERS
+    normalized = _normalize(text)
+    if normalized in _CASUAL_EXACT:
+        return True
+    return any(sub in normalized for sub in _CASUAL_SUBSTRINGS)
 
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

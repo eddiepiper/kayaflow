@@ -10,18 +10,29 @@ from config.prompts import CASUAL_CHAT_SYSTEM_PROMPT, SYSTEM_PROMPT
 # ── detection ────────────────────────────────────────────────────────────────
 
 @pytest.mark.parametrize("text", [
+    # exact matches
     "hi", "hello", "hey", "yo",
-    "how are you", "how are you?", "how r u",
-    "what can you do", "what can you do?",
-    "what do you do", "who are you",
+    "how are you", "how r u",
+    "what can you do", "what do you do", "who are you",
     "tell me about yourself", "what is kayaflow",
     "are you useful",
     "thanks", "thank you", "thx", "noted", "got it",
     "ok", "okay", "cool", "alright", "sure",
     "ok thanks", "thanks lah", "ok lah",
+    # punctuation variants — all must work
+    "hi!", "hello!", "hey!", "thanks!",
+    "how are you?", "what can you do?", "who are you?",
+    "hi.", "thanks.",
+    # partial / extended phrasing (substring matches)
+    "how are you ah",        # SG suffix
+    "how are you leh",
+    "what scope can you do", # typo variant
+    "what can u do",
+    "who are you exactly",
+    "tell me about kayaflow",
 ])
 def test_is_casual_chat_true(text):
-    assert is_casual_chat(text) is True
+    assert is_casual_chat(text) is True, f"Expected True for: {text!r}"
 
 
 @pytest.mark.parametrize("text", [
@@ -33,15 +44,25 @@ def test_is_casual_chat_true(text):
     "is the trust signal strong enough",
     "the font size seems off",
     "can you check the KYC flow",
+    "review this screen",
+    "is the disclosure placement correct",
 ])
 def test_is_casual_chat_false(text):
-    assert is_casual_chat(text) is False
+    assert is_casual_chat(text) is False, f"Expected False for: {text!r}"
 
 
 def test_is_casual_chat_case_insensitive():
     assert is_casual_chat("How Are You") is True
     assert is_casual_chat("HELLO") is True
     assert is_casual_chat("THANKS") is True
+    assert is_casual_chat("WHAT CAN YOU DO") is True
+
+
+def test_is_casual_chat_strips_all_punctuation():
+    assert is_casual_chat("hello!") is True
+    assert is_casual_chat("hi!!") is True
+    assert is_casual_chat("thanks,") is True
+    assert is_casual_chat("how are you?!") is True
 
 
 def test_is_casual_chat_trailing_period():
