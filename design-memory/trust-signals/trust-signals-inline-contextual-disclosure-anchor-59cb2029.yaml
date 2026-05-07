@@ -1,0 +1,24 @@
+pattern_id: 59cb2029
+name: Inline Contextual Disclosure Anchor
+category: trust-signals
+tags:
+- disclosure
+- trust-signals
+- financial-ui
+- inline-tooltip
+- risk-communication
+- fintech
+description: A small ⓘ icon placed inline next to a high-stakes data point (e.g. principal,
+  guaranteed returns) that expands a concise, honest disclosure without navigating
+  the user away from the screen. Keeps trust signals contextually bound to the exact
+  moment of user doubt.
+context: Use when a financial or commitment-heavy figure (principal, locked amount,
+  guaranteed payout) appears on screen without sufficient context about conditions,
+  risks, or guarantees — especially at decision or confirmation stages where trust
+  is load-bearing.
+approved_by: user:8170738717
+approved_at: '2026-05-07'
+examples: []
+anti_pattern_if: The disclosure text is vague, overly legal, or so long it disrupts
+  the layout — or if it's used so frequently on one screen that it creates anxiety
+  rather than confidence. Should not replace proper upfront communication of risk.

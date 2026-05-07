@@ -1,0 +1,26 @@
+pattern_id: 933124de
+name: Contextual Risk Disclosure
+category: trust-signals
+tags:
+- disclosure
+- trust
+- fintech
+- legal-copy
+- dark-patterns
+- financial-ux
+- regulatory-compliance
+description: Place risk caveats and disclaimers adjacent to the specific claim or
+  feature they qualify, rather than aggregating all legal copy at the bottom of the
+  screen. This keeps trust signals honest and legally transparent without creating
+  a contradictory user experience.
+context: Use when a product makes a reassuring or benefit-forward claim (e.g. principal
+  protection, zero fees, guaranteed returns) that has meaningful conditions or exceptions
+  attached. Especially critical in regulated industries — fintech, insurance, health
+  — where disclaimers are legally required and user trust is high-stakes.
+approved_by: user:8170738717
+approved_at: '2026-05-07'
+examples: []
+anti_pattern_if: The qualifying text is so long or technical that surfacing it inline
+  creates visual noise and disrupts scannability — in that case, use a tooltip, footnote
+  anchor, or expandable disclosure linked directly from the claim instead of burying
+  it below the fold.
