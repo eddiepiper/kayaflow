@@ -1,4 +1,10 @@
 # KayaFlow
+
+[![Tests](https://img.shields.io/badge/tests-32%20passed-brightgreen)](tests/)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](requirements.txt)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+[![Version](https://img.shields.io/badge/version-v1.0--foundation-orange)](https://github.com/eddiepiper/kayaflow/releases/tag/v1.0-foundation)
+
 **Your AI UX Kaki for Customer Journeys**
 
 KayaFlow is a Telegram-first AI UX review bot powered by Hermes-style memory. Upload UI screenshots or customer journey screens — KayaFlow reviews the UX, gives clear Singapore-style conversational feedback, asks follow-up questions, and saves approved reusable UX patterns into a GitHub-ready design memory structure.

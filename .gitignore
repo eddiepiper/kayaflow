@@ -1,9 +1,9 @@
-# Environment
+# === Secrets ===
 .env
 .env.local
 .env.*.local
 
-# Python
+# === Python ===
 __pycache__/
 *.py[cod]
 *$py.class
@@ -17,35 +17,32 @@ dist/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Virtual environments
+# === Virtual environments ===
 venv/
 env/
 ENV/
 .venv/
 
-# Testing
+# === Testing ===
 .pytest_cache/
 .coverage
 htmlcov/
 .tox/
 
-# IDEs
+# === IDEs ===
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
 
-# OS
+# === OS ===
 .DS_Store
 Thumbs.db
 
-# KayaFlow specific
-memory/store.json          # Gitignore local memory store (use seed_memory.py for shared patterns)
-tmp/                       # Temp image processing files
+# === KayaFlow runtime ===
+memory/store.json
+tmp/
 *.log
 logs/
-
-# Design memory YAML files are intentionally tracked (design system artifacts)
-# Only ignore locally downloaded screenshots
 downloads/
