@@ -218,17 +218,8 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     else:
         footer = ""
 
-    primary = JOURNEY_CATEGORY_LABELS.get(journey_stage, "")
-    secondary = _SECONDARY_LENSES.get(journey_stage, "")
-    if primary and secondary:
-        header = f"_Primary lens: {primary} · Also checked: {secondary}_\n\n"
-    elif primary:
-        header = f"_Primary lens: {primary}_\n\n"
-    else:
-        header = ""
-
     await update.message.reply_text(
-        header + feedback + footer,
+        feedback + footer,
         parse_mode="Markdown",
     )
 
