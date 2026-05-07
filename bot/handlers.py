@@ -208,8 +208,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     else:
         footer = ""
 
-    stage_label = JOURNEY_CATEGORY_LABELS.get(journey_stage, "")
-    header = f"_Stage: {stage_label}_\n\n" if stage_label else ""
+    header = ""
 
     await update.message.reply_text(
         header + feedback + footer,
