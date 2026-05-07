@@ -89,6 +89,23 @@ See `.env.example` for all required configuration.
 
 ---
 
+## Senior CX Knowledge Pack
+
+KayaFlow V1.1 includes a local reviewer knowledge pack covering:
+
+- enterprise CX review principles
+- banking trust patterns
+- wealth product UX
+- disclosure placement
+- CTA timing
+- onboarding psychology
+- cognitive load
+- Singapore PM tone guide
+
+This upgrades KayaFlow from a generic UX reviewer into a structured senior CX reviewer. The knowledge pack is loaded locally — no vector DB, no internet required at runtime. Relevant docs are selected automatically from context keywords (e.g. "structured deposit", "NRIC", "returns", "CTA").
+
+---
+
 ## Design Memory Structure
 
 Approved patterns are saved as YAML files in `design-memory/`:

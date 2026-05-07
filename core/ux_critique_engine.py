@@ -14,8 +14,16 @@ from config.prompts import (
     PATTERN_EXTRACTION_PROMPT,
     FOLLOW_UP_PROMPT,
 )
+from core.knowledge_loader import load_knowledge
 
 logger = logging.getLogger(__name__)
+
+KNOWLEDGE_PACK_INSTRUCTION = """
+You have been provided with a Senior CX Knowledge Pack above.
+Use it silently to inform your critique. Focus on: trust, comprehension, CTA timing, disclosure placement, cognitive load, and customer progression readiness.
+Avoid generic UX comments. Produce senior-level critique grounded in the principles provided.
+Do not quote or reproduce the knowledge pack in your response.
+"""
 
 
 async def critique_screenshot(
@@ -29,8 +37,14 @@ async def critique_screenshot(
     """
     Analyze a UI screenshot and return (feedback_text, extracted_pattern | None).
     """
-    # Build system prompt with optional context blocks
+    # Build knowledge context from OCR text + journey stage
+    knowledge_context_input = f"{journey_stage} {ocr_text}".strip()
+    knowledge = load_knowledge(knowledge_context_input)
+
+    # Build system prompt
     system = SYSTEM_PROMPT
+    if knowledge:
+        system += f"\n\n# Senior CX Knowledge Pack\n\n{knowledge}\n\n{KNOWLEDGE_PACK_INSTRUCTION}"
     if journey_stage != "unknown":
         stage_label = JOURNEY_CATEGORY_LABELS.get(journey_stage, journey_stage)
         system += JOURNEY_CONTEXT_PROMPT.format(

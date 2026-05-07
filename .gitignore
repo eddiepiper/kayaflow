@@ -46,3 +46,8 @@ tmp/
 *.log
 logs/
 downloads/
+
+# === Knowledge sources (cloned repos — not committed, re-clone via setup) ===
+knowledge/awesome-design-md/
+knowledge/awesome-design-systems/
+knowledge/carbon-design-system/
