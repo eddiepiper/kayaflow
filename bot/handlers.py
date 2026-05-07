@@ -16,7 +16,7 @@ from config.settings import (
 from core.image_intake import download_telegram_photo, preprocess_image, get_best_photo
 from core.ocr_extractor import extract_text
 from core.journey_context import detect_journey_stage
-from core.ux_critique_engine import critique_screenshot, handle_follow_up
+from core.ux_critique_engine import critique_screenshot, handle_follow_up, handle_casual_chat
 from core.conversation_manager import ConversationManager
 from core.approval_layer import is_approval_message, approve_and_save_pattern
 from memory.hermes_memory import build_memory_context
@@ -233,8 +233,33 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     )
 
 
+_CASUAL_TRIGGERS: frozenset[str] = frozenset({
+    # greetings
+    "hi", "hello", "hey", "yo", "hiya", "sup", "morning", "good morning",
+    "afternoon", "good afternoon", "evening", "good evening",
+    # state / feelings
+    "how are you", "how are you?", "how r u", "how r u?", "how you doing",
+    "how are u", "u ok", "you ok", "you good",
+    # capability questions
+    "what can you do", "what can you do?", "what do you do", "what do you do?",
+    "what are you", "what are you?", "who are you", "who are you?",
+    "tell me about yourself", "what is kayaflow", "what's kayaflow",
+    "what does kayaflow do", "are you useful", "are you useful?",
+    # acknowledgements
+    "thanks", "thank you", "thx", "ty", "appreciate it", "appreciated",
+    "noted", "got it", "ok", "okay", "cool", "alright", "sure", "nice",
+    "good", "great", "ok thanks", "okay thanks", "thanks lah", "ok lah",
+})
+
+
+def is_casual_chat(text: str) -> bool:
+    """Return True if the message is casual chat rather than a UX review follow-up."""
+    normalized = text.lower().strip().rstrip(".")
+    return normalized in _CASUAL_TRIGGERS
+
+
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle text messages — follow-ups or approvals."""
+    """Handle text messages — casual chat, follow-ups, or approvals."""
     user_id = update.effective_user.id
     text = update.message.text.strip()
     session = _conversation_manager.get_or_create(user_id)
@@ -251,10 +276,17 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
             )
             return
 
+    # Casual chat — route to lightweight SG-tone handler regardless of session state
+    if is_casual_chat(text):
+        await update.message.chat.send_action(ChatAction.TYPING)
+        reply = await handle_casual_chat(client=_claude_client, user_message=text)
+        await update.message.reply_text(reply)
+        return
+
     # No conversation history — prompt to send a screenshot
     if not session.turns:
         await update.message.reply_text(
-            "Send me a UI screenshot to get started! I'll review the UX for you."
+            "Send me a screenshot and I'll give you a CX review."
         )
         return
 

@@ -6,9 +6,10 @@ import logging
 
 import anthropic
 
-from config.settings import CLAUDE_CRITIQUE_MODEL, JOURNEY_CATEGORY_LABELS
+from config.settings import CLAUDE_CRITIQUE_MODEL, CLAUDE_QUICK_MODEL, JOURNEY_CATEGORY_LABELS
 from config.prompts import (
     SYSTEM_PROMPT,
+    CASUAL_CHAT_SYSTEM_PROMPT,
     JOURNEY_CONTEXT_PROMPT,
     CRITIQUE_WITH_MEMORY_PROMPT,
     PATTERN_EXTRACTION_PROMPT,
@@ -114,6 +115,20 @@ async def handle_follow_up(
         messages=messages,
     )
 
+    return response.content[0].text.strip()
+
+
+async def handle_casual_chat(
+    client: anthropic.AsyncAnthropic,
+    user_message: str,
+) -> str:
+    """Handle casual chat messages with Singapore PM teammate tone."""
+    response = await client.messages.create(
+        model=CLAUDE_QUICK_MODEL,
+        max_tokens=150,
+        system=CASUAL_CHAT_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": user_message}],
+    )
     return response.content[0].text.strip()
 
 
