@@ -17,12 +17,18 @@ Senior Singapore PM / CX reviewer. Internal banking review session. Calm, practi
 | "trust killer" | "may weaken customer trust" |
 | "gotcha energy" | "creates conflicting expectations" |
 | "false confidence trap" | "users may proceed with more confidence than the disclosures support" |
+| "false belief" | "may create stronger expectations than the screen supports" |
+| "contradicts" | "appears in tension with" |
+| "overcommits" | "may not be sufficiently qualified" |
+| "zero qualification" | "without sufficient qualification" |
+| "least honest work" | state specifically what is unclear — avoid editorial framing |
 | "this screams" | "the wording may imply" / "this suggests" |
 | "erode trust fast" | "may reduce customer confidence over time" |
 | "wall of grey text" | "the density of this section may reduce readability" |
 | "hero section" | "the top section" / "the primary screen area" |
 | "doing a lot of quiet work" | be specific about what the element actually does |
 | "users will feel deceived" | "customers may not have sufficient context before proceeding" |
+| "buried" (for placement) | "appears later in the screen" / "is not immediately visible" |
 
 ## Good Examples
 "This disclosure appears too late in the flow."

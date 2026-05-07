@@ -24,6 +24,16 @@ from memory.memory_store import MemoryStore
 
 logger = logging.getLogger(__name__)
 
+# Secondary review lenses shown per journey stage — reflects what knowledge is actually loaded
+_SECONDARY_LENSES: dict[str, str] = {
+    "onboarding":    "Trust Signals, Onboarding Psychology, Cognitive Load",
+    "kyc":           "Trust Signals, Disclosure Placement, Data Collection Friction",
+    "trust-signals": "Disclosure Placement, Product Comprehension, CTA Timing",
+    "cta-patterns":  "CTA Timing, Comprehension Gates, Cognitive Load",
+    "navigation":    "Cognitive Load, Screen Progression, Wayfinding",
+    "anti-patterns": "Trust Signals, Disclosure Placement, Dark Patterns",
+}
+
 # Shared state (initialized by telegram_bot.py)
 _claude_client: anthropic.AsyncAnthropic | None = None
 _conversation_manager: ConversationManager | None = None
@@ -208,7 +218,14 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     else:
         footer = ""
 
-    header = ""
+    primary = JOURNEY_CATEGORY_LABELS.get(journey_stage, "")
+    secondary = _SECONDARY_LENSES.get(journey_stage, "")
+    if primary and secondary:
+        header = f"_Primary lens: {primary} · Also checked: {secondary}_\n\n"
+    elif primary:
+        header = f"_Primary lens: {primary}_\n\n"
+    else:
+        header = ""
 
     await update.message.reply_text(
         header + feedback + footer,
